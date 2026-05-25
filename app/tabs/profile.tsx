@@ -274,7 +274,10 @@ export default function ProfileScreen() {
   const language = useAppStore((s) => s.language);
   const { t } = useTranslation();
   const setLanguage = useAppStore((s) => s.setLanguage);
-
+  const theme = useAppStore((s) => s.theme);
+  const setTheme = useAppStore((s) => s.setTheme);
+  const currency = useAppStore((s) => s.currency);
+  const setCurrency = useAppStore((s) => s.setCurrency);
   const guestLabel = t('profile.labels.guest', 'Guest');
   const notAvailableLabel = t('profile.labels.notAvailable', 'N/A');
   const avatarTitle = t('profile.avatar.title', 'Avatar');
@@ -702,15 +705,15 @@ export default function ProfileScreen() {
   const isResetDisabled = isResettingAvatar || (!user?.avatarUrl && !previewUri);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme === 'dark' ? '#000' : '#fff' }}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.select({ ios: 0, android: 0 }) ?? 0}
       >
         <ScrollView
-          style={{ flex: 1, backgroundColor: 'white' }}
-          contentContainerStyle={{ flexGrow: 1, paddingBottom: 32, backgroundColor: 'white' }}
+          style={{ flex: 1 }}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }}
           keyboardShouldPersistTaps="handled"
         >
           <ScreenContainer>
@@ -774,6 +777,66 @@ export default function ProfileScreen() {
                   />
                 </YStack>
               </SectionCard>
+               {/* DARK MODE */}
+              <SectionCard
+                title={t('settings.theme.title', 'Theme')}
+                icon={<Text>🌙</Text>}
+              >
+                <YStack gap="$2">
+                  <Text fontSize={12} color="$gray9">
+                    {t('settings.theme.description', 'Choose light or dark mode.')}
+                  </Text>
+                  <XStack gap="$2">
+                    <Button
+                      flex={1}
+                      size="$3"
+                      variant={theme === 'light' ? undefined : 'outlined'}
+                      bg={theme === 'light' ? '$green9' : undefined}
+                      color={theme === 'light' ? 'white' : undefined}
+                      onPress={() => setTheme('light')}
+                    >
+                      ☀️ Light
+                    </Button>
+                    <Button
+                      flex={1}
+                      size="$3"
+                      variant={theme === 'dark' ? undefined : 'outlined'}
+                      bg={theme === 'dark' ? '$green9' : undefined}
+                      color={theme === 'dark' ? 'white' : undefined}
+                      onPress={() => setTheme('dark')}
+                    >
+                      🌙 Dark
+                    </Button>
+                  </XStack>
+                </YStack>
+              </SectionCard>
+
+            {/* CURRENCY */}
+              <SectionCard
+                title="Valyuta"
+                icon={<Text>💱</Text>}
+              >
+                <YStack gap="$2">
+                  <Text fontSize={12} color="$gray9">
+                    Hisob-kitoblarda ishlatiladigan valyutani tanlang.
+                  </Text>
+                  <XStack gap="$2" flexWrap="wrap">
+                    {['UZS', 'USD', 'EUR', 'RUB', 'JPY'].map((cur) => (
+                      <Button
+                        key={cur}
+                        size="$3"
+                        variant={currency === cur ? undefined : 'outlined'}
+                        bg={currency === cur ? '$green9' : undefined}
+                        color={currency === cur ? 'white' : undefined}
+                        onPress={() => setCurrency(cur)}
+                      >
+                        {cur}
+                      </Button>
+                    ))}
+                  </XStack>
+                </YStack>
+              </SectionCard>
+
 
 
               {/* User info */}

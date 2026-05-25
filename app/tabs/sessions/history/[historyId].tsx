@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { YStack, XStack, Text, ScrollView, Button } from 'tamagui';
 
@@ -42,24 +42,20 @@ type ParticipantView = {
 
 const buildParticipantsView = (bill?: SessionHistoryEntry): ParticipantView[] => {
   if (!bill) return [];
-
   const totalsByParticipant = new Map<string, SessionHistoryTotalsByParticipant>();
   (bill.totals?.byParticipant ?? []).forEach(item => {
     totalsByParticipant.set(item.uniqueId, item);
   });
-
   const itemsById = new Map<string, SessionHistoryItem>();
   (bill.totals?.byItem ?? []).forEach(item => {
     itemsById.set(item.itemId, item);
   });
-
   const allocationsByParticipant = new Map<string, SessionHistoryAllocation[]>();
   (bill.allocations ?? []).forEach(alloc => {
     const collection = allocationsByParticipant.get(alloc.participantId) ?? [];
     collection.push(alloc);
     allocationsByParticipant.set(alloc.participantId, collection);
   });
-
   return (bill.participants ?? []).map(p => {
     const totals = totalsByParticipant.get(p.uniqueId);
     const allocations = allocationsByParticipant.get(p.uniqueId) ?? [];
@@ -93,6 +89,16 @@ export default function HistoryDetailsScreen() {
   const currentLimit = useSessionsHistoryStore(state => state.limit);
   const error = useSessionsHistoryStore(state => state.error);
   const fetchHistory = useSessionsHistoryStore(state => state.fetchHistory);
+
+  const [paidList, setPaidList] = useState<string[]>([]);
+
+  const togglePaid = (uniqueId: string) => {
+    setPaidList(prev =>
+      prev.includes(uniqueId)
+        ? prev.filter(id => id !== uniqueId)
+        : [...prev, uniqueId]
+    );
+  };
 
   const bill: SessionHistoryEntry | undefined = useMemo(() => {
     if (!historyId) return undefined;
@@ -128,11 +134,7 @@ export default function HistoryDetailsScreen() {
     return (
       <YStack f={1} bg="$background" ai="center" jc="center" gap="$3">
         <Text fontSize={16} fontWeight="600">History not found</Text>
-        {error && (
-          <Text fontSize={14} color="$red10">
-            {error}
-          </Text>
-        )}
+        {error && <Text fontSize={14} color="$red10">{error}</Text>}
         <Button onPress={() => router.back()}>Go back</Button>
       </YStack>
     );
@@ -164,7 +166,7 @@ export default function HistoryDetailsScreen() {
             borderWidth={1}
             borderColor="#2ECC71"
             br={12}
-            bg="white"
+            bg="$background"
             px={16}
             py={12}
             gap="$3"
@@ -201,6 +203,15 @@ export default function HistoryDetailsScreen() {
                 </Text>
               )}
             </YStack>
+
+            <Button
+              size="$3"
+              bg={paidList.includes(participant.uniqueId) ? '$green9' : '$gray3'}
+              color={paidList.includes(participant.uniqueId) ? 'white' : '$gray11'}
+              onPress={() => togglePaid(participant.uniqueId)}
+            >
+              {paidList.includes(participant.uniqueId) ? "✅ To'landi" : "💰 To'ladim"}
+            </Button>
           </YStack>
         ))}
       </ScrollView>

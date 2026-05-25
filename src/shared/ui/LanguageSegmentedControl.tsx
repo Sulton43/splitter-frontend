@@ -68,11 +68,11 @@ export function LanguageSegmentedControl({
               height,
               width: segmentWidth,
               borderRadius: 999,
-              backgroundColor: 'white',
+              backgroundColor: '#499669',
               transform: [{ translateX: thumbAnim }],
               // тонкая рамка и тень для объёма
               borderWidth: 1,
-              borderColor: '#D4D4D8',
+              borderColor: '#40a46a',
               shadowColor: '#000',
               shadowOpacity: 0.06,
               shadowRadius: 8,
@@ -107,7 +107,7 @@ export function LanguageSegmentedControl({
                 fontSize={13}
                 fontWeight="700"
                 // цвета читаемые и контрастные
-                color={active ? '$gray12' : '$gray11'}
+                color={active ? 'white' : '$gray11'}
               >
                 {label}
               </Text>

@@ -3,8 +3,8 @@ import { Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { YStack, XStack, Text, View, Circle } from 'tamagui';
-import { ScanLine, Users, UserPlus, RefreshCw } from '@tamagui/lucide-icons';
 import { useTranslation } from 'react-i18next';
+import { ScanLine, Users, UserPlus, RefreshCw } from '@tamagui/lucide-icons';
 
 import { ScreenContainer } from '@/shared/ui/ScreenContainer';
 import UserAvatar from '@/shared/ui/UserAvatar';
@@ -17,7 +17,7 @@ const DEFAULT_CURRENCY = 'UZS';
 const formatSessionDate = (value?: string, locale: string = 'en') => {
   if (!value) return '';
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
+  if (Number.isNaN(date.getTime())) return value; 
   const options: Intl.DateTimeFormatOptions = {
     day: '2-digit',
     month: 'short',
@@ -35,15 +35,17 @@ function ActionButton({
   title,
   icon,
   onPress,
+  width = 171,
 }: {
   title: string;
   icon: React.ReactNode;
   onPress: () => void;
+  width?: number;
 }) {
   return (
     <XStack
       onPress={onPress}
-      width={171}
+      width={width}
       height={48}
       borderRadius={12}
       alignItems="center"
@@ -128,7 +130,7 @@ function BillCard({
         borderWidth={1}
         borderColor="$gray6"
         p="$3"
-        backgroundColor="white"
+        backgroundColor="$background"
       >
         <XStack jc="space-between" ai="center">
           <YStack>
@@ -190,6 +192,7 @@ export default function HomePage() {
 
   const openFriends = () => router.push('/tabs/friends');
   const openGroups = () => router.push('/tabs/groups');
+  const openSearch = () => router.push('/tabs/search');
   const onScan = () => router.push('/tabs/scan-receipt');
   const openAllSessions = () => router.push('/tabs/sessions/history');
 
@@ -197,7 +200,7 @@ export default function HomePage() {
 
   return (
     <ScreenContainer>
-      <YStack f={1} ai="center" bg="white">
+      <YStack f={1} ai="center">
         <YStack ai="center" mt="$6" mb="$4">
           <Pressable onPress={onScan}>
             <Circle size={64} bg="#2ECC71" ai="center" jc="center" elevationAndroid={4}>
@@ -209,6 +212,7 @@ export default function HomePage() {
           </Text>
         </YStack>
 
+        {/* Do'stlar va Guruhlar — pastda */}
         <XStack w={358} jc="space-between" mb="$5">
           <ActionButton
             title={t('home.actions.friends', 'Friends')}

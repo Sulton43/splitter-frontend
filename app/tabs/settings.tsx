@@ -14,7 +14,7 @@ import { changePassword, updateUsername } from '@/features/auth/api';
 import { LANGUAGE_OPTIONS, type LanguageCode } from '@/shared/config/languages';
 
 export default function SettingsScreen() {
-  const { user, setUser, language, setLanguage } = useAppStore();
+  const { user, setUser, language, setLanguage, theme, setTheme } = useAppStore();
   const { t } = useTranslation();
   const isLoggedIn = !!user;
 
@@ -194,6 +194,32 @@ export default function SettingsScreen() {
               </YStack>
 
               <Separator />
+                            <Separator />
+
+              {/* DARK MODE */}
+              <YStack space="$3">
+                <Text fontSize={16} fontWeight="600">
+                  {t('settings.theme.title', 'Theme')}
+                </Text>
+                <Text fontSize={14} color="$gray10">
+                  {t('settings.theme.description', 'Choose light or dark mode.')}
+                </Text>
+                <XStack space="$2" backgroundColor="$gray3" borderRadius="$8" padding="$1">
+                  <Button
+                    title="☀️ Light"
+                    variant={theme === 'light' ? 'primary' : 'outline'}
+                    size="small"
+                    onPress={() => setTheme('light')}
+                  />
+                  <Button
+                    title="🌙 Dark"
+                    variant={theme === 'dark' ? 'primary' : 'outline'}
+                    size="small"
+                    onPress={() => setTheme('dark')}
+                  />
+                </XStack>
+                
+              </YStack>
 
               {/* USERNAME */}
               <YStack space="$3">

@@ -1,5 +1,6 @@
 {
   "expo": {
+    "hostUri": "10.52.69.219:8081", 
     "name": "Receipt Splitter",
     "slug": "receipt-splitter",
     "icon": "./assets/icon.png",

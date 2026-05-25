@@ -28,6 +28,7 @@ export default function SessionParticipantsScreen() {
 
   // -------- state --------
   const [q, setQ] = useState('');
+  const [note, setNote] = useState('');
   // Инициализируем пусто: «меня» добавим эффектом, когда будет доступен user
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [activeGroupId, setActiveGroupId] = useState<number | null>(null);
@@ -218,6 +219,10 @@ export default function SessionParticipantsScreen() {
 
     setReceiptParticipants(participants);
 
+    if (note.trim()) {
+        useReceiptSessionStore.getState().setNote?.(note.trim());
+      }
+
     const sessionId = session?.sessionId ? String(session.sessionId) : undefined;
     const params = new URLSearchParams();
     const effectiveReceiptId = receiptId ?? sessionId;
@@ -229,6 +234,8 @@ export default function SessionParticipantsScreen() {
     const target = qs ? `/tabs/sessions/items-split?${qs}` : '/tabs/sessions/items-split';
     router.push(target as any);
   };
+
+
 
   // UI: Select pill (84×29)
   const SelectPill = ({ on, onPress }: { on: boolean; onPress: () => void }) => (
@@ -309,6 +316,20 @@ export default function SessionParticipantsScreen() {
           ))}
         </XStack>
       )}
+      {/* Izoh */}
+        <Input
+          placeholder="Sessiyaga izoh qo'shing (ixtiyoriy)..."
+          value={note}
+          onChangeText={setNote}
+          h={41}
+          px={16}
+          borderRadius={10}
+          bg="$backgroundPress"
+          borderWidth={0}
+          mb="$3"
+        />
+
+
 
       {/* Search */}
       <Input

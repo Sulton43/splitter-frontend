@@ -5,10 +5,10 @@ import { Tabs, useRouter } from 'expo-router';
 import { Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { YStack, XStack, Text, View } from 'tamagui';
-import { Home, Settings, Bell, ChevronLeft } from '@tamagui/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import { AppState } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { Home, Settings, Bell, ChevronLeft, Search } from '@tamagui/lucide-icons';
 
 import { useAppStore } from '@/shared/lib/stores/app-store';
 import UserAvatar from '@/shared/ui/UserAvatar';
@@ -92,7 +92,12 @@ function GlobalTabsHeader(props: any) {
           </Text>
         </XStack>
 
-        <XStack ai="center" gap="$3">
+       <XStack ai="center" gap="$3">
+          {/* Qidiruv */}
+          <Pressable onPress={() => router.push('/tabs/search')}>
+            <Search size={22} color="$gray11" />
+          </Pressable>
+
           <Pressable onPress={() => router.push('/tabs/friends/requests')}>
             <View>
               <Bell size={22} color="$gray11" />
@@ -186,6 +191,14 @@ export default function TabLayout() {
       <Tabs.Screen name="sessions/finish" options={{ href: null, title: finishTitle }} />
       <Tabs.Screen name="sessions/history/index" options={{ href: null, title: historyTitle }} />
       <Tabs.Screen name="sessions/history/[historyId]" options={{ href: null, title: historyDetailsTitle }} />
+
+      <Tabs.Screen
+        name="search"
+        options={{
+          href: null,
+          title: 'Qidiruv',
+        }}
+      />
 
     </Tabs>
   );

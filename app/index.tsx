@@ -8,6 +8,8 @@ import { LANGUAGE_OPTIONS, type LanguageCode } from '@/shared/config/languages';
 import { Button } from '@/shared/ui/Button';
 import { ScreenContainer } from '@/shared/ui/ScreenContainer';
 import { ScanLine } from '@tamagui/lucide-icons';
+import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const languages = LANGUAGE_OPTIONS.map((option) => ({
   code: option.code,
@@ -16,12 +18,23 @@ const languages = LANGUAGE_OPTIONS.map((option) => ({
 
 export default function Welcome() {
   const token = useAppStore((state) => state.token);
+  const [showOnboarding, setShowOnboarding] = React.useState(false);
+
+  useEffect(() => {
+    AsyncStorage.getItem('onboarding_done').then((val) => {
+      if (!val) setShowOnboarding(true);
+    });
+  }, []);
+
   const { t } = useTranslation();
   const currentLanguage = useAppStore((state) => state.language);
   const setLanguage = useAppStore((state) => state.setLanguage);
 
-  // Если уже залогинен — сразу в табы
   if (token) return <Redirect href="/tabs" />;
+
+  if (showOnboarding) {
+    return <Redirect href={"/onboarding" as any} />;
+  }
 
   const changeLanguage = (langCode: LanguageCode) => {
     if (langCode === currentLanguage) return;
